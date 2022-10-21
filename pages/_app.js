@@ -10,9 +10,11 @@ import { collection, setDoc, doc } from "firebase/firestore";
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth);
 
+  console.log(user);
+
   useEffect(() => {
     if (user) {
-      const newCityRef = doc(collection(db, "users"));
+      const newCityRef = doc(collection(db, 'users'));
       setDoc(newCityRef,
         {
           email: user.email,

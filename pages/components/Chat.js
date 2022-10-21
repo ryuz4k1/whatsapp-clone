@@ -11,7 +11,7 @@ function Chat({ id, users }) {
   const userChatRef = collection(db, "users");
   const queryRef = query(
     userChatRef,
-    where("email", "==", getRecipientEmail(users, user))
+    where('email', '==', getRecipientEmail(users, user))
   );
   const [recipientSnapshot] = useCollection(queryRef);
   const recipient = recipientSnapshot?.docs?.[0]?.data();

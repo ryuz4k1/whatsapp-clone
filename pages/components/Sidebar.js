@@ -26,7 +26,11 @@ function Sidebar() {
 
     if (!input) return null;
 
-    if (EmailValidator.validate(input) && chatAlreadyExists(input) && input !== user.email) {
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExists(input) &&
+      input !== user.email
+    ) {
       // We add the chat into the DB "chats" collectiın if it doesnt already exist and is valid
       await addDoc(collection(db, "chats"), {
         users: [user.email, input],
@@ -34,12 +38,11 @@ function Sidebar() {
     }
   };
 
-  const chatAlreadyExists = (recipientEmail) => {
+  const chatAlreadyExists = (recipientEmail) =>
     !!chatsSnapshot?.docs.find(
       (chat) =>
         chat.data().users.find((user) => user === recipientEmail)?.length > 0
     );
-  };
 
   return (
     <Container>
@@ -65,7 +68,7 @@ function Sidebar() {
       <SearchButton onClick={createChat}>Start a new chat</SearchButton>
 
       {/* List of chats */}
-      {chatsSnapshot?.docs.map(chat => (
+      {chatsSnapshot?.docs.map((chat) => (
         <Chat key={chat.id} id={chat.id} users={chat.data().users} />
       ))}
     </Container>
