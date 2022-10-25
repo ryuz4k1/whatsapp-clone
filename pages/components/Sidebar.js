@@ -7,17 +7,13 @@ import * as EmailValidator from "email-validator";
 import { auth, db } from "../../firebase-conf";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, addDoc, query, where } from "firebase/firestore";
 import Chat from "../components/Chat";
+import firebase from "firebase";
 
 function Sidebar() {
   const [user] = useAuthState(auth);
-  const userChatRef = collection(db, "chats");
-  const queryRef = query(
-    userChatRef,
-    where("users", "array-contains", user.email)
-  );
-  const [chatsSnapshot] = useCollection(queryRef);
+  const userChatRef = db.collection('chats').where('users', 'array-contains', user.email);
+  const [chatsSnapshot] = useCollection(userChatRef);
 
   const createChat = async () => {
     const input = prompt(
@@ -32,9 +28,9 @@ function Sidebar() {
       input !== user.email
     ) {
       // We add the chat into the DB "chats" collectiın if it doesnt already exist and is valid
-      await addDoc(collection(db, "chats"), {
+      db.collection('users').add({
         users: [user.email, input],
-      });
+      })
     }
   };
 

@@ -1,32 +1,37 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { Avatar } from "@material-ui/core";
 import getRecipientEmail from "../../utils/getRecipientEmail";
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase-conf";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, query, where } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 function Chat({ id, users }) {
+  const router = useRouter();
   const [user] = useAuthState(auth);
-  const userChatRef = collection(db, "users");
-  const queryRef = query(
-    userChatRef,
-    where('email', '==', getRecipientEmail(users, user))
-  );
-  const [recipientSnapshot] = useCollection(queryRef);
+  const userChatRef = db.collection('chats').where('email', '==', getRecipientEmail(users, user));
+  const [recipientSnapshot] = useCollection(userChatRef);
+
+  const enterChat = () => {
+    router.push(`/chat/${id}`);
+  };
+
   const recipient = recipientSnapshot?.docs?.[0]?.data();
   const recipientEmail = getRecipientEmail(users, user);
 
   return (
-    <Container>
-        {recipient ? (<UserAvatar src={recipient?.photoURL} />) : <UserAvatar> {recipientEmail[0]} </UserAvatar> }
-        <p>{recipientEmail}</p>
+    <Container onClick={enterChat}>
+      {recipient ? (
+        <UserAvatar src={recipient?.photoURL} />
+      ) : (
+        <UserAvatar> {recipientEmail[0]} </UserAvatar>
+      )}
+      <p>{recipientEmail}</p>
     </Container>
-  )
+  );
 }
 
-export default Chat
-
+export default Chat;
 
 const Container = styled.div`
   display: flex;

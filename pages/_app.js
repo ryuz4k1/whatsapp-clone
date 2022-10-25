@@ -4,22 +4,17 @@ import { auth, db } from "../firebase-conf";
 import Login from "./login";
 import Loading from "./components/Loading";
 import React, { useEffect } from "react";
-import { serverTimestamp } from "firebase/firestore";
-import { collection, setDoc, doc } from "firebase/firestore";
+import firebase from "firebase";
 
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth);
-
-  console.log(user);
-
   useEffect(() => {
     if (user) {
-      const newCityRef = doc(collection(db, 'users'));
-      setDoc(newCityRef,
+      db.collection("users").doc(user.uid).set(
         {
           email: user.email,
-          lastSeen: serverTimestamp(),
-          photoURL: user.photoURL
+          lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          photoURL: user.photoURL,
         },
         { merge: true }
       );
