@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Sidebar from "../components/Sidebar";
 import ChatScreen from "../components/ChatScreen";
 import { auth, db } from "../../firebase-conf";
-import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import getRecipientEmail from "../../utils/getRecipientEmail";
 
@@ -47,8 +46,6 @@ export async function getServerSideProps(context) {
     id: chatRes.id,
     ...chatRes.data(),
   };
-
-  console.log(chat, messages);
 
   return {
     props: {

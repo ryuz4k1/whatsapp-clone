@@ -8,11 +8,12 @@ import { auth, db } from "../../firebase-conf";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Chat from "../components/Chat";
-import firebase from "firebase";
 
 function Sidebar() {
   const [user] = useAuthState(auth);
-  const userChatRef = db.collection('chats').where('users', 'array-contains', user.email);
+  const userChatRef = db
+    .collection("chats")
+    .where("users", "array-contains", user.email);
   const [chatsSnapshot] = useCollection(userChatRef);
 
   const createChat = async () => {
@@ -28,9 +29,9 @@ function Sidebar() {
       input !== user.email
     ) {
       // We add the chat into the DB "chats" collectiın if it doesnt already exist and is valid
-      db.collection('users').add({
+      db.collection("chats").add({
         users: [user.email, input],
-      })
+      });
     }
   };
 
@@ -73,7 +74,20 @@ function Sidebar() {
 
 export default Sidebar;
 
-const Container = styled.div``;
+const Container = styled.div`
+  flex: 0.45;
+  border-right: 1px solid whitesmoke;
+  height: 100vh;
+  min-width: 300px;
+  max-width: 350px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
 
 const Search = styled.div`
   display: flex;
