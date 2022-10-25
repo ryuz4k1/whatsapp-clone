@@ -6,16 +6,16 @@ import moment from "moment/moment";
 function Message({ user, message }) {
   const [userLoggedIn] = useAuthState(auth);
 
-  const TypeOfMessage = (user = userLoggedIn.email ? Sender : Receiver);
+  const TypeOfMessage = user === userLoggedIn.email ? Sender : Receiver;
 
   return (
     <Container>
       <TypeOfMessage>
         {" "}
         {message.message}
-        <TimeStamp>
+        <Timestamp>
           {message.timestamp ? moment(message.timestamp).format("LT") : "..."}
-        </TimeStamp>
+        </Timestamp>
       </TypeOfMessage>
     </Container>
   );
@@ -41,12 +41,12 @@ const Sender = styled(MessageElement)`
   background-color: #dcf8d6;
 `;
 
-const Reciever = styled(MessageElement)`
+const Receiver = styled(MessageElement)`
   text-align: left;
   background-color: whitesmoke;
 `;
 
-const TimeStamp = styled.span`
+const Timestamp = styled.span`
   color: gray;
   padding: 10px;
   font-size: 9px;
